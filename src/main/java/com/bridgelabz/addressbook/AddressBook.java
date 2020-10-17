@@ -1,8 +1,10 @@
 package com.bridgelabz.addressbook;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,18 +13,28 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+
 public class AddressBook {
 	public static Scanner sc = new Scanner(System.in);
 	public ArrayList<ContactDetails> contactList;
 	public HashMap<String, ArrayList<ContactDetails>> personByState;
 	public HashMap<String, ArrayList<ContactDetails>> personByCity;
-	
+	private static final String ADDRESSBOOK_CSV_FILE = "C:\\Users\\MAYUR ZOPE\\eclipse-workspace\\AddressBookJsonCsv\\src\\main\\java\\com\\bridgelabz\\addressbook.csv";
+
 	public AddressBook() {
 		personByCity = new HashMap<String, ArrayList<ContactDetails>>();
 		personByState = new HashMap<String, ArrayList<ContactDetails>>();
 		contactList = new ArrayList<>();
 	}
 
+	// write data in text file
 	public void writeData() {
 		StringBuffer empBuffer = new StringBuffer();
 		contactList.forEach(contact -> {
@@ -37,6 +49,7 @@ public class AddressBook {
 		}
 	}
 
+	// read data from text file
 	public void readData() {
 		try {
 			Files.lines(new File("addressBook-file.txt").toPath()).map(line -> line.trim())
@@ -47,6 +60,35 @@ public class AddressBook {
 		}
 	}
 
+	// write data to CSV file
+	public void writeDataToCSV() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+		try (Writer writer = Files.newBufferedWriter(Paths.get(ADDRESSBOOK_CSV_FILE));) {
+			StatefulBeanToCsvBuilder<ContactDetails> builder = new StatefulBeanToCsvBuilder<>(writer);
+			StatefulBeanToCsv<ContactDetails> beanWriter = builder.build();
+			beanWriter.write(contactList);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Read data from CSV file 
+	public void readDataUsingCSV() throws IOException {
+		try (Reader reader = Files.newBufferedReader(Paths.get(ADDRESSBOOK_CSV_FILE));
+				CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();) {
+			String[] nextRecord;
+			while ((nextRecord = csvReader.readNext()) != null) {
+				System.out.println("First Name - " + nextRecord[3]);
+				System.out.println("Last Name - " + nextRecord[4]);
+				System.out.println("Address - " + nextRecord[0]);
+				System.out.println("City - " + nextRecord[1]);
+				System.out.println("State - " + nextRecord[6]);
+				System.out.println("Email - " + nextRecord[2]);
+				System.out.println("Phone - " + nextRecord[5]);
+				System.out.println("Zip - " + nextRecord[7]);
+			}
+		}
+	}
 	public ArrayList<ContactDetails> addContactDetails() {
 		System.out.println("Enter the contact details:");
 		System.out.println("Enter first Name:");

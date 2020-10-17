@@ -1,10 +1,11 @@
 package com.bridgelabz.addressbook;
 
-
-
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 class AddressBookMain {
 	public static Scanner sc = new Scanner(System.in);
@@ -184,7 +185,7 @@ class AddressBookMain {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
 		System.out.println("Welcome to the Address Book Management System using Java Stream");
 		AddressBookMain addressBookMain = new AddressBookMain();
 		boolean flag = true;
@@ -203,7 +204,10 @@ class AddressBookMain {
 			System.out.println("12.Sort Contact By Zip Code");
 			System.out.println("13.Write Data into the text file");
 			System.out.println("14.Read data from text file to the console");
-			System.out.println("15.Exit");
+			System.out.println("15.Write Data into the CSV file");
+			System.out.println("16.Read data from CSV file to the console");
+			System.out.println("17.Exit");
+			
 			String addressBookName = null;
 			System.out.println("Enter choice: ");
 			int option = sc.nextInt();
@@ -287,6 +291,24 @@ class AddressBookMain {
 				break;
 
 			case 15:
+				try {
+					addressBook.writeDataToCSV();
+				} catch (IOException e) {
+					System.out.println("Exception is - " + e);
+				}
+				
+				break;
+
+			case 16:
+				try {
+					addressBook.readDataUsingCSV();
+				} catch (IOException e) {
+					System.out.println("Exception is - " + e);
+				}
+				
+				break;
+		
+			case 17:
 				flag = false;
 				break;
 			}
