@@ -206,7 +206,9 @@ class AddressBookMain {
 			System.out.println("14.Read data from text file to the console");
 			System.out.println("15.Write Data into the CSV file");
 			System.out.println("16.Read data from CSV file to the console");
-			System.out.println("17.Exit");
+			System.out.println("17.Write Data into the Json file");
+			System.out.println("18.Read data from Json file to the console");
+			System.out.println("19.Exit");
 			
 			String addressBookName = null;
 			System.out.println("Enter choice: ");
@@ -307,8 +309,24 @@ class AddressBookMain {
 				}
 				
 				break;
-		
+				
 			case 17:
+				try {
+					addressBook.writeDataInJSon();
+				} catch (IOException e) {
+					System.out.println("Exception is - " + e);
+				}
+				break;
+
+			case 18:
+				try {
+					addressBook. readDataFromJson();
+				} catch (IOException e) {
+					System.out.println("Exception is - " + e);
+				}
+				break;
+
+			case 19:
 				flag = false;
 				break;
 			}

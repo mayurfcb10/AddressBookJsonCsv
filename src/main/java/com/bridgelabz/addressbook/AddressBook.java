@@ -26,7 +26,8 @@ public class AddressBook {
 	public ArrayList<ContactDetails> contactList;
 	public HashMap<String, ArrayList<ContactDetails>> personByState;
 	public HashMap<String, ArrayList<ContactDetails>> personByCity;
-	private static final String ADDRESSBOOK_CSV_FILE = "C:\\Users\\MAYUR ZOPE\\eclipse-workspace\\AddressBookJsonCsv\\src\\main\\java\\com\\bridgelabz\\addressbook.csv";
+	private static final String ADDRESSBOOK_CSV_FILE = "C:\\Users\\MAYUR ZOPE\\eclipse-workspace\\AddressBookManagementJavaStream\\src\\main\\java\\com\\bridgelabz\\addressbook.csv";
+	private static final String ADDRESSBOOK_JSON_FILE = "C:\\Users\\MAYUR ZOPE\\eclipse-workspace\\AddressBookManagementJavaStream\\src\\main\\java\\com\\bridgelabz\\addressbook.json";
 
 	public AddressBook() {
 		personByCity = new HashMap<String, ArrayList<ContactDetails>>();
@@ -34,7 +35,6 @@ public class AddressBook {
 		contactList = new ArrayList<>();
 	}
 
-	// write data in text file
 	public void writeData() {
 		StringBuffer empBuffer = new StringBuffer();
 		contactList.forEach(contact -> {
@@ -49,7 +49,6 @@ public class AddressBook {
 		}
 	}
 
-	// read data from text file
 	public void readData() {
 		try {
 			Files.lines(new File("addressBook-file.txt").toPath()).map(line -> line.trim())
@@ -60,7 +59,6 @@ public class AddressBook {
 		}
 	}
 
-	// write data to CSV file
 	public void writeDataToCSV() throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
 		try (Writer writer = Files.newBufferedWriter(Paths.get(ADDRESSBOOK_CSV_FILE));) {
 			StatefulBeanToCsvBuilder<ContactDetails> builder = new StatefulBeanToCsvBuilder<>(writer);
@@ -72,7 +70,6 @@ public class AddressBook {
 		}
 	}
 
-	// Read data from CSV file 
 	public void readDataUsingCSV() throws IOException {
 		try (Reader reader = Files.newBufferedReader(Paths.get(ADDRESSBOOK_CSV_FILE));
 				CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();) {
@@ -89,6 +86,41 @@ public class AddressBook {
 			}
 		}
 	}
+
+	public void writeDataInJSon() throws IOException {
+		{
+			Path filePath = Paths.get(
+					"C:\\Users\\MAYUR ZOPE\\eclipse-workspace\\AddressBookManagementJavaStream\\src\\main\\java\\com\\bridgelabz\\addressbook.json");
+			Gson gson = new Gson();
+			String json = gson.toJson(contactList);
+			FileWriter writer = new FileWriter(String.valueOf(filePath));
+			writer.write(json);
+			writer.close();
+		}
+	}
+
+	// Read from JSON
+	public void readDataFromJson() throws IOException {
+		ArrayList<ContactDetails> contactList = null;
+		Path filePath = Paths.get(
+				"C:\\Users\\MAYUR ZOPE\\eclipse-workspace\\AddressBookManagementJavaStream\\src\\main\\java\\com\\bridgelabz\\addressbook.json");
+		try (Reader reader = Files.newBufferedReader(filePath);) {
+			Gson gson = new Gson();
+			contactList = new ArrayList<ContactDetails>(Arrays.asList(gson.fromJson(reader, ContactDetails[].class)));
+			for (ContactDetails contact : contactList) {
+				System.out.println("Firstname : " + contact.getFirstName());
+				System.out.println("Lastname : " + contact.getLastName());
+				System.out.println("Address : " + contact.getAddress());
+				System.out.println("City : " + contact.getCity());
+				System.out.println("State : " + contact.getState());
+				System.out.println("Zip : " + contact.getZip());
+				System.out.println("Phone number : " + contact.getPhoneNumber());
+				System.out.println("Email : " + contact.getEmail());
+
+			}
+		}
+	}
+
 	public ArrayList<ContactDetails> addContactDetails() {
 		System.out.println("Enter the contact details:");
 		System.out.println("Enter first Name:");
