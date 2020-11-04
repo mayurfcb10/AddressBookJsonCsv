@@ -1,6 +1,8 @@
 package com.bridgelabz.addressbook;
 
 import static org.junit.Assert.*;
+
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,5 +27,16 @@ public class AddressBookTest {
         addressBookService.updateContactInformation("Terisa","Morgan");
         boolean result = addressBookService.checkEmployeePayrollInSyncWithDB("Terisa");
         Assert.assertTrue(result);
+    }
+    
+    /* TestCase to check the contacts added in the given date range*/
+    @Test
+    public void givenDateRangeWhenRetrievedShouldMatchContactCount() throws AddressBookException {
+        AddressBookService addressBookService = new AddressBookService();
+        addressBookService.readAddressBookData(DB_IO);
+        LocalDate startDate = LocalDate.of(2019,8,23);
+        LocalDate endDate = LocalDate.now();
+        List<ContactDetails> contactList = addressBookService.readContactDataForDateRange(DB_IO, startDate, endDate);
+        Assert.assertEquals(2,contactList.size());
     }
 }
