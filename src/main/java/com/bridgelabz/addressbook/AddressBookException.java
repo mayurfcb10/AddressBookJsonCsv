@@ -3,7 +3,7 @@ package com.bridgelabz.addressbook;
 public class AddressBookException extends Exception {
 	
 	    enum ExceptionType{
-	        SQL_EXCEPTION, RETRIEVAL_PROBLEM
+	        SQL_EXCEPTION, RETRIEVAL_PROBLEM, UPDATE_PROBLEM
 	    }
 	    ExceptionType type;
 

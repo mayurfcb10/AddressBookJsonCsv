@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddressBookDBService {
-
+	 private PreparedStatement contactDataStatement;
+	 
 	/* Method to setup Connection with database */
 	private Connection getConnection() throws SQLException {
 		String jdbcURL = "jdbc:mysql://localhost:3306/addressbookservice";
@@ -62,5 +63,52 @@ public class AddressBookDBService {
 		}
 		return ContactList;
 	}
+	
+	/*method to update contact details*/
+    public int updateContactData(String first_name, String lastName) throws AddressBookException {
+        return this.updateContactDataUsingPreparedStatement(first_name, lastName);
+    }
+
+    /*method to update contact details using prepared statement*/
+    private int updateContactDataUsingPreparedStatement(String firstName, String lastName) throws AddressBookException {
+        try (Connection connection = this.getConnection()) {
+            String sql = "update user_details set last_name = ? where first_name = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, lastName);
+            preparedStatement.setString(2, firstName);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.UPDATE_PROBLEM);
+        }
+    }
+
+    /*Method to generate result for contact data*/
+    public List<ContactDetails> getContactData(String firstName) throws AddressBookException {
+        List<ContactDetails> contactList;
+        if (this.contactDataStatement == null)
+            this.prepareStatementForContactData();
+        try {
+            contactDataStatement.setString(1, firstName);
+            ResultSet resultSet = contactDataStatement.executeQuery();
+            contactList = this.getEmployeepayrollData(resultSet);
+        } catch (SQLException e) {
+            throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.SQL_EXCEPTION);
+        }
+        return contactList;
+    }
+
+    /*Method to generate prepared statement for contact data*/
+    private void prepareStatementForContactData() throws AddressBookException {
+        try {
+            Connection connection = this.getConnection();
+            String sql = "select * from user_details join contact on user_details.user_id = contact.user_id " +
+                    "join location on user_details.user_id = location.user_id\n" +
+                    "join user_contact_type_link on user_details.user_id = user_contact_type_link.user_id\n" +
+                    " join contact_type on user_contact_type_link.type_id = contact_type.type_id where user_details.first_name = ?;";
+            contactDataStatement = connection.prepareStatement(sql);
+        } catch (SQLException e) {
+            throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.SQL_EXCEPTION);
+        }
+    }
 
 }
