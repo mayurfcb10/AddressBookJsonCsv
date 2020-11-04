@@ -2,6 +2,7 @@ package com.bridgelabz.addressbook;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class AddressBookService {
 	private List<ContactDetails> contactList;
@@ -50,6 +51,15 @@ public class AddressBookService {
         if(ioService.equals(IOService.DB_IO))
            this.contactList = new AddressBookDBService().readContactDataForDateRange(startDate,endDate);
         return this.contactList;
+    }
+    
+    /*Method to read Contact by giving State as parameter*/
+    public Map<String, String> readContactByStateOrCity(IOService ioService, String cityOrState) throws AddressBookException {
+        if (ioService.equals(IOService.DB_IO ) && cityOrState.equals("state"))
+            return new AddressBookDBService().readContactByState();
+        if (ioService.equals(IOService.DB_IO ) && cityOrState.equals("city"))
+            return new AddressBookDBService().readContactByCity();
+        return null;
     }
 
 

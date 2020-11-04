@@ -3,7 +3,9 @@ package com.bridgelabz.addressbook;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddressBookDBService {
 	 private PreparedStatement contactDataStatement;
@@ -121,5 +123,31 @@ public class AddressBookDBService {
                 " join contact_type on contact_type.type_id = user_contact_type_link.type_id where user_details.date_added between '%s' and '%s'; ", Date.valueOf(startDate), Date.valueOf(endDate));
         return this.getAddressBookUsingDB(sql);
     }
+
+	public Map<String, String> readContactByState() throws AddressBookException {
+		String sql = String.format("SELECT first_name,state from user_details as ud join location as l on ud.user_id = l.user_id;");
+		return readContactByCityOrState("first_name", "state",sql);
+	}
+	
+	public Map<String, String> readContactByCity() throws AddressBookException {
+		String sql = String.format("SELECT first_name,city from user_details as ud join location as l on ud.user_id = l.user_id;");
+		return readContactByCityOrState("first_name", "city",sql);
+	}
+	
+	 private Map<String, String> readContactByCityOrState(String firstName, String cityOrState, String sql) throws AddressBookException {
+	        Map<String, String> CountCityOrStateMap = new HashMap<>();
+	        try (Connection connection = this.getConnection();) {
+	            Statement statement = connection.createStatement();
+	            ResultSet resultSet = statement.executeQuery(sql);
+	            while (resultSet.next()) {
+	                String getResultSet1 = resultSet.getString(cityOrState);
+	                String getResultSet2 = resultSet.getString(firstName);
+	                CountCityOrStateMap.put(getResultSet1, getResultSet2);
+	            }
+	        } catch (SQLException e) {
+	            throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.SQL_EXCEPTION);
+	        }
+	        return CountCityOrStateMap;
+	    }
 
 }
