@@ -16,4 +16,14 @@ public class AddressBookTest {
 		List<ContactDetails> contactList = addressBookService.readAddressBookData(DB_IO);
 		Assert.assertEquals(3, contactList.size());
 	}
+	
+	 /*Test Case to update the contact details updated in database using JDBC*/
+    @Test
+    public void givenNewInformationOfContact_WhenUpdatedShouldMatch() throws AddressBookException {
+        AddressBookService addressBookService = new AddressBookService();
+        List<ContactDetails> contactList = addressBookService.readAddressBookData(DB_IO);
+        addressBookService.updateContactInformation("Terisa","Morgan");
+        boolean result = addressBookService.checkEmployeePayrollInSyncWithDB("Terisa");
+        Assert.assertTrue(result);
+    }
 }
