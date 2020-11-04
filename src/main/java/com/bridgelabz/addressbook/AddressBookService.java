@@ -1,5 +1,6 @@
 package com.bridgelabz.addressbook;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class AddressBookService {
@@ -44,5 +45,12 @@ public class AddressBookService {
         List<ContactDetails> contactList = new AddressBookDBService().getContactData(firstName);
         return contactList.get(0).equals(getContactData(firstName));
     }
+    
+    public List<ContactDetails> readContactDataForDateRange(IOService ioService, LocalDate startDate, LocalDate endDate) throws AddressBookException {
+        if(ioService.equals(IOService.DB_IO))
+           this.contactList = new AddressBookDBService().readContactDataForDateRange(startDate,endDate);
+        return this.contactList;
+    }
+
 
 }

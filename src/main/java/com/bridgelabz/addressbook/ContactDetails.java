@@ -1,5 +1,7 @@
 package com.bridgelabz.addressbook;
 
+import java.time.LocalDate;
+
 import com.opencsv.bean.CsvBindByName;
 
 public class ContactDetails {
@@ -23,6 +25,7 @@ public class ContactDetails {
 	public int userId;
 	public int typeId;
 	public String contactType;
+	private LocalDate startDate;
 
 	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
 			String phoneNumber, String zip) {
@@ -43,6 +46,13 @@ public class ContactDetails {
 		this.userId = userId;
 		this.typeId = typeId;
 		this.contactType = contactType;
+	}
+	
+	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
+			String phoneNumber, String zip, int userId, int typeId, String contactType, LocalDate startDate) {
+		this(firstName, lastName, address, city, state, email, phoneNumber, zip,userId, typeId, contactType);
+		this.startDate = startDate;
+		
 	}
 
 	public int getUserId() {
@@ -124,6 +134,7 @@ public class ContactDetails {
 	public String getZip() {
 		return zip;
 	}
+	
 
 	@Override
 	public int hashCode() {
@@ -136,6 +147,7 @@ public class ContactDetails {
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		result = prime * result + typeId;
 		result = prime * result + userId;
@@ -186,6 +198,11 @@ public class ContactDetails {
 			if (other.phoneNumber != null)
 				return false;
 		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;
+		if (startDate == null) {
+			if (other.startDate != null)
+				return false;
+		} else if (!startDate.equals(other.startDate))
 			return false;
 		if (state == null) {
 			if (other.state != null)
