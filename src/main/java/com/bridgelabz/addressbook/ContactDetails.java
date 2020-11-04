@@ -20,6 +20,9 @@ public class ContactDetails {
 	private String zip;
 	@CsvBindByName(column = "PhoneNumber")
 	private String phoneNumber;
+	public int userId;
+	public int typeId;
+	public String contactType;
 
 	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
 			String phoneNumber, String zip) {
@@ -32,6 +35,38 @@ public class ContactDetails {
 		setPhoneNumber(phoneNumber);
 		setZip(zip);
 
+	}
+
+	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
+			String phoneNumber, String zip, int userId, int typeId, String contactType) {
+		this(firstName, lastName, address, city, state, email, phoneNumber, zip);
+		this.userId = userId;
+		this.typeId = typeId;
+		this.contactType = contactType;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public int getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
+	}
+
+	public String getContactType() {
+		return contactType;
+	}
+
+	public void setContactType(String contactType) {
+		this.contactType = contactType;
 	}
 
 	public ContactDetails() {
