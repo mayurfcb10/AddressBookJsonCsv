@@ -2,6 +2,7 @@ package com.bridgelabz.addressbook;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,10 @@ public class AddressBookService {
 	public AddressBookService() {
 		addressBookServiceDB =AddressBookDBService.getInstance();
 		this.contactList = new ArrayList<>();
+	}
+
+	public int countEntries(IOService ioService) {
+			return contactList.size();
 	}
 
 	enum IOService {
@@ -72,6 +77,48 @@ public class AddressBookService {
 								  String email, String phoneNumber, String zip, int userId, int  typeId, String contactType, LocalDate startDate) throws AddressBookException {
 		this.contactList.add(addressBookServiceDB.addContactDetails(firstName,lastName,address,city,state,email,phoneNumber, zip, userId,typeId,contactType,startDate));
 		System.out.println(contactList);
+	}
+
+	/* Add multiple contact to addressbook without thread */
+	public void addContactsToAddressBook(List<ContactDetails> contactDataList) {
+		contactDataList.forEach(contactDetailsData ->  {
+				try {
+					this.addContactDetails(contactDetailsData.getFirstName(),contactDetailsData.getLastName(),contactDetailsData.getAddress(),contactDetailsData.getCity(),contactDetailsData.getState(),contactDetailsData.getEmail(), contactDetailsData.getPhoneNumber(),
+							contactDetailsData.getZip(),contactDetailsData.userId,contactDetailsData.typeId, contactDetailsData.contactType, contactDetailsData.startDate);
+				} catch (AddressBookException e) {
+					e.printStackTrace();
+				}
+		});
+	}
+
+	/* Add multiple contact to addressbook with thread */
+	public void addContactsToAddressBookWithThreads(List<ContactDetails> contactDataList) {
+		Map<Integer, Boolean> contactAdditionStatus = new HashMap<Integer, Boolean>();
+		contactDataList.forEach(contactDetailsData ->  {
+			Runnable task = () -> {
+				contactAdditionStatus.put(contactDetailsData.hashCode(), false);
+				System.out.println("Employee Being Added: " + Thread.currentThread().getName());
+				try {
+					this.addContactDetails(contactDetailsData.getFirstName(),contactDetailsData.getLastName(),contactDetailsData.getAddress(),contactDetailsData.getCity(),contactDetailsData.getState(),contactDetailsData.getEmail(), contactDetailsData.getPhoneNumber(),
+							contactDetailsData.getZip(),contactDetailsData.userId,contactDetailsData.typeId, contactDetailsData.contactType, contactDetailsData.startDate);
+				} catch (AddressBookException e) {
+					e.printStackTrace();
+				}
+				contactAdditionStatus.put(contactDetailsData.hashCode(), true);
+				System.out.println("Employee Added " + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, contactDetailsData.getFirstName());
+			thread.start();
+		});
+		while(contactAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println(contactDataList);
+
 	}
 
 

@@ -1,6 +1,7 @@
 package com.bridgelabz.addressbook;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import com.opencsv.bean.CsvBindByName;
 
@@ -25,7 +26,7 @@ public class ContactDetails {
 	public int userId;
 	public int typeId;
 	public String contactType;
-	private LocalDate startDate;
+	public LocalDate startDate;
 
 	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
 						  String phoneNumber, String zip, int userId, int typeId, String contactType) {
@@ -153,25 +154,29 @@ public class ContactDetails {
 		return zip;
 	}
 
-
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
-		result = prime * result + ((city == null) ? 0 : city.hashCode());
-		result = prime * result + ((contactType == null) ? 0 : contactType.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
-		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
-		result = prime * result + ((state == null) ? 0 : state.hashCode());
-		result = prime * result + typeId;
-		result = prime * result + userId;
-		result = prime * result + ((zip == null) ? 0 : zip.hashCode());
-		return result;
+		return Objects.hash(firstName,lastName,address,city,state,email,phoneNumber,zip,userId,typeId,contactType,startDate);
 	}
+
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + ((address == null) ? 0 : address.hashCode());
+//		result = prime * result + ((city == null) ? 0 : city.hashCode());
+//		result = prime * result + ((contactType == null) ? 0 : contactType.hashCode());
+//		result = prime * result + ((email == null) ? 0 : email.hashCode());
+//		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+//		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+//		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+//		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
+//		result = prime * result + ((state == null) ? 0 : state.hashCode());
+//		result = prime * result + typeId;
+//		result = prime * result + userId;
+//		result = prime * result + ((zip == null) ? 0 : zip.hashCode());
+//		return result;
+//	}
 
 	@Override
 	public boolean equals(Object obj) {
