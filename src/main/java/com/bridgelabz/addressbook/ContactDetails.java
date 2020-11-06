@@ -28,7 +28,23 @@ public class ContactDetails {
 	private LocalDate startDate;
 
 	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
-			String phoneNumber, String zip) {
+						  String phoneNumber, String zip, int userId, int typeId, String contactType) {
+
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.zip = zip;
+		this.userId = userId;
+		this.typeId = typeId;
+		this.contactType = contactType;
+	}
+
+	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
+						  String phoneNumber, String zip) {
 		setFirstName(firstName);
 		setLastName(lastName);
 		setAddress(address);
@@ -39,20 +55,22 @@ public class ContactDetails {
 		setZip(zip);
 
 	}
-
 	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
-			String phoneNumber, String zip, int userId, int typeId, String contactType) {
-		this(firstName, lastName, address, city, state, email, phoneNumber, zip);
+						  String phoneNumber, String zip, int userId, int typeId, String contactType, LocalDate startDate) {
+		this(firstName, lastName, address, city, state, email, phoneNumber, zip,userId, typeId, contactType);
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.zip = zip;
 		this.userId = userId;
 		this.typeId = typeId;
 		this.contactType = contactType;
-	}
-	
-	public ContactDetails(String firstName, String lastName, String address, String city, String state, String email,
-			String phoneNumber, String zip, int userId, int typeId, String contactType, LocalDate startDate) {
-		this(firstName, lastName, address, city, state, email, phoneNumber, zip,userId, typeId, contactType);
 		this.startDate = startDate;
-		
+
 	}
 
 	public int getUserId() {
@@ -134,7 +152,7 @@ public class ContactDetails {
 	public String getZip() {
 		return zip;
 	}
-	
+
 
 	@Override
 	public int hashCode() {
