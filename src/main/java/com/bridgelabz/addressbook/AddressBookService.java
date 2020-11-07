@@ -14,13 +14,22 @@ public class AddressBookService {
 		this.contactList = new ArrayList<>();
 	}
 
-	public int countEntries(IOService ioService) {
-			return contactList.size();
+	public AddressBookService(List<ContactDetails> addressBookList) {
+		this();
+		this.contactList = new ArrayList<>(addressBookList);
 	}
 
-	enum IOService {
-		DB_IO
+	
+	public enum IOService {
+		DB_IO, REST_IO
 	}
+	
+	public int countEntries(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO))
+		return contactList.size();
+		return contactList.size();
+	}
+
 
 	public List<ContactDetails> readAddressBookData(IOService ioService) throws AddressBookException {
 		if (ioService.equals(IOService.DB_IO)) {
