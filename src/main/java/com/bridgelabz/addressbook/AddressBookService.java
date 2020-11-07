@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 public class AddressBookService {
 	private List<ContactDetails> contactList ;
 	private static AddressBookDBService addressBookServiceDB;
@@ -39,13 +41,15 @@ public class AddressBookService {
 	}
 
 	/*method to update contact information in Database*/
-	public void updateContactInformation(String firstName, String lastName) throws AddressBookException {
+	public void updateContactInformation(String firstName, String lastName, IOService ioService) throws AddressBookException {
 		int result = addressBookServiceDB.updateContactData(firstName, lastName);
-		if (result == 0) {
-			try {
-				throw new AddressBookException("unable to update the info", AddressBookException.ExceptionType.UPDATE_PROBLEM);
-			} catch (AddressBookException e) {
-				e.printStackTrace();
+		if (ioService.equals(IOService.DB_IO)) {
+			if (result == 0) {
+				try {
+					throw new AddressBookException("unable to update the info", AddressBookException.ExceptionType.UPDATE_PROBLEM);
+				} catch (AddressBookException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		ContactDetails contact = this.getContactData(firstName);
@@ -54,7 +58,7 @@ public class AddressBookService {
 	}
 
 	/*Method to get Contact using first name*/
-	private ContactDetails getContactData(String firstName) {
+	public ContactDetails getContactData(String firstName) {
 		return this.contactList.stream()
 				.filter(employeePayrollDataItem -> employeePayrollDataItem.getFirstName().equals(firstName))
 				.findFirst()
@@ -81,6 +85,18 @@ public class AddressBookService {
 			return addressBookServiceDB.readContactByCity();
 		return null;
 	}
+	
+	public void addContactDetails(ContactDetails contactData, IOService ioService) throws AddressBookException {
+		if(ioService.equals(ioService.DB_IO)) {
+			this.addContactDetails(contactData.getFirstName(),contactData.getLastName(),contactData.getAddress(),contactData.getCity(),contactData.getState(),contactData.getEmail(),contactData.getPhoneNumber(),
+					contactData.getZip(), contactData.userId,contactData.typeId,contactData.contactType,contactData.startDate);
+			System.out.println(contactList);
+			
+		}else
+		{
+			contactList.add(contactData);
+		}
+	}
 
 	public void addContactDetails(String firstName, String lastName, String address, String city, String state,
 								  String email, String phoneNumber, String zip, int userId, int  typeId, String contactType, LocalDate startDate) throws AddressBookException {
@@ -99,6 +115,7 @@ public class AddressBookService {
 				}
 		});
 	}
+	
 
 	/* Add multiple contact to addressbook with thread */
 	public void addContactsToAddressBookWithThreads(List<ContactDetails> contactDataList) {
@@ -129,7 +146,6 @@ public class AddressBookService {
 		System.out.println(contactDataList);
 
 	}
-
 
 }
 
