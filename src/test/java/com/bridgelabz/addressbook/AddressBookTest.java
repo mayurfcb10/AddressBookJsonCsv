@@ -1,27 +1,18 @@
 package com.bridgelabz.addressbook;
 
-import static org.junit.Assert.*;
+import static com.bridgelabz.addressbook.AddressBookService.IOService.DB_IO;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.bridgelabz.addressbook.AddressBookService.IOService;
-import com.google.gson.Gson;
-
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-
-import static com.bridgelabz.addressbook.AddressBookService.IOService.DB_IO;
 
 public class AddressBookTest {
 	AddressBookService addressBookService;
@@ -43,7 +34,7 @@ public class AddressBookTest {
 	@Test
 	public void givenNewInformationOfContact_WhenUpdatedShouldMatch() throws AddressBookException {
 		List<ContactDetails> contactList = addressBookService.readAddressBookData(DB_IO);
-		addressBookService.updateContactInformation("Terisa", "Morgan");
+		addressBookService.updateContactInformation("Terisa", "Morgan",IOService.DB_IO);
 		boolean result = addressBookService.checkAddressBookInSyncWithDB("Terisa");
 		Assert.assertTrue(result);
 	}
@@ -66,12 +57,14 @@ public class AddressBookTest {
 				&& getPersonDetailMap.get("MP").equals("Terisa"));
 	}
 
+	/* TestCase to check the person belonging to the particular city */
 	@Test
 	public void givenState_shouldReturnThePersonBelongingToThatCity() throws AddressBookException {
 		Map<String, String> getPersonDetailMap = addressBookService.readContactByStateOrCity(DB_IO, "city");
 		Assert.assertTrue(getPersonDetailMap.get("Indore").equals("Bill"));
 	}
 
+	/* TestCase to add the contact  */
 	@Test
 	public void givenContactToBeAdded_shouldreturntheContactAddedinDBandinSyncWithDB() throws AddressBookException {
 		addressBookService.addContactDetails("Rahul", "Dixit", "Housing", "Mhow", "Maharastra", "rahul.eee18@bhu.in",
@@ -80,6 +73,7 @@ public class AddressBookTest {
 		Assert.assertTrue(result);
 	}
 
+	/* TestCase to add multiple contact  */
 	public void givenContactsToBeAdded_shouldReturnTheContactAddedInDB_shouldMatchDBEntries()
 			throws AddressBookException {
 		ContactDetails[] contactDetailsArray = {
